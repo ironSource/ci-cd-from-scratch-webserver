@@ -1,0 +1,17 @@
+---
+- hosts: localhost
+  vars:
+  tasks:
+  - debug:
+      msg: "executing tests on {{ image }}:{{ commit }} "
+  - name: running unit tests
+    docker_container:
+      name: "{{ name }}"
+      state: present
+      image: "{{image}}:{{commit}}"
+      command: npm run test-with-cover
+  - name: copy artifacts folder
+    command: docker cp "{{name}}":/usr/src/app/ ~/
+  - name: cat cobertura file
+    command: cat ~/artifacts/coverage/cobertura-coverage.xml
+      # command: docker exec -it "{{ image }}" bash -c 'echo "Hello1"; echo "Hello2"'
