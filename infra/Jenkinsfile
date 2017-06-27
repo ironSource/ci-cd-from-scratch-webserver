@@ -19,7 +19,7 @@ pipeline {
     }
     stage ('SET ENVIRONMENT VARIABLES') {
       steps {
-        withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: '9b5b3d67-68ed-4d82-958b-842f79a6980f', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD']]) {
+        withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'b86dc47c-c339-4b03-9aaf-0be24704ef6b', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD']]) {
           sh '''
             set +e
             set +x
@@ -116,7 +116,7 @@ pipeline {
         expression {return env.ORIGINAL_BRANCH=~ /^(feature|test|bug)/}
       }
       steps {
-        withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: '9b5b3d67-68ed-4d82-958b-842f79a6980f', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD']]) {
+        withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'b86dc47c-c339-4b03-9aaf-0be24704ef6b', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD']]) {
           sh '''
             git push https://${GIT_USERNAME}:${GIT_PASSWORD}@${GIT_REPO}
           '''
