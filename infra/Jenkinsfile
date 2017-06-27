@@ -14,7 +14,7 @@ pipeline {
     }
     stage ('CHECKOUT') {
       steps {
-        git branch: '**', credentialsId: 'f1d482f9-23a0-4570-ba01-eab7c1f299c9', url: "https://${env.GIT_REPO}"
+        git branch: '**', credentialsId: 'b86dc47c-c339-4b03-9aaf-0be24704ef6b', url: "https://${env.GIT_REPO}"
       }
     }
     stage ('SET ENVIRONMENT VARIABLES') {
