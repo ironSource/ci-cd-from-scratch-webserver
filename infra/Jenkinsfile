@@ -2,7 +2,7 @@
 pipeline {
   agent {label 'slave'}
   environment{
-    GIT_REPO='rproxy.ironsrc.com/scm/~daniel.zinger/jenkins-utils-webserver.git'
+    GIT_REPO='github.com/ironSource/ci-cd-from-scratch-webserver.git'
     // TIMESTAMP=(new Date()).toTimestamp().getTime()
   }
   stages {
