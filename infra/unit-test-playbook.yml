@@ -13,5 +13,4 @@
   - name: copy artifacts folder
     command: docker cp "{{name}}":/usr/src/app/ ~/
   - name: cat cobertura file
-    command: cat ~/artifacts/coverage/cobertura-coverage.xml
-      # command: docker exec -it "{{ image }}" bash -c 'echo "Hello1"; echo "Hello2"'
+    command: cat ~/app/artifacts/coverage/cobertura-coverage.xml
