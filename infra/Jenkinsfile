@@ -1,9 +1,14 @@
 #!groovy?
+def createPullRequest(url, text) {
+  def payload = JsonOutput.toJson(text) 
+    sh "curl -n -X POST -H 'Content-Type: application/json' --data ${payload} ${url}"
+}
+
 pipeline {
+
   agent {label 'slave'}
   environment{
     GIT_REPO='github.com/ironSource/ci-cd-from-scratch-webserver.git'
-    // TIMESTAMP=(new Date()).toTimestamp().getTime()
   }
   stages {
     stage ('PREBUILD') {
