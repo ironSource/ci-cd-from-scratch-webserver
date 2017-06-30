@@ -70,7 +70,7 @@ pipeline {
     }
     stage ('CHECKOUT') {
       steps {
-        git branch: '**', credentialsId: 'b86dc47c-c339-4b03-9aaf-0be24704ef6b', url: "https://${env.GIT_REPO}"
+        git branch: '**/staging', credentialsId: 'b86dc47c-c339-4b03-9aaf-0be24704ef6b', url: "https://${env.GIT_REPO}"
       }
     }
     stage ('SET ENVIRONMENT VARIABLES') {
@@ -198,7 +198,7 @@ pipeline {
 
 
       when {
-        expression {return env.GIT_BRANCH =~ /^(staging)/}
+        expression {return env.GIT_BRANCH == 'origin/staging'}
       }
       steps {
         createGithubPullRequest("tests jenkins pull request", env.PROJECT, env.GIT_BRANCH)
