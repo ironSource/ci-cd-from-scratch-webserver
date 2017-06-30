@@ -198,7 +198,7 @@ pipeline {
 
 
       when {
-        expression {return env.GIT_BRANCH == 'origin/staging'}
+        expression {return env.GIT_BRANCH == 'staging'}
       }
       steps {
         createGithubPullRequest("tests jenkins pull request", env.PROJECT, env.GIT_BRANCH)
