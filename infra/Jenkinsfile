@@ -195,12 +195,13 @@ pipeline {
       }
     }
     stage ('CREATE PULL REQUEST') {
+
+
+      when {
+        expression {return env.GIT_BRANCH =~ /^(staging)/}
+      }
       steps {
-        if (env.GIT_BRANCH =~ /^staging/) {
-            createGithubPullRequest("tests jenkins pull request", env.PROJECT, env.GIT_BRANCH)
-        } else {
-            echo 'no need to create pull request'
-        }
+        createGithubPullRequest("tests jenkins pull request", env.PROJECT, env.GIT_BRANCH)
       }
     }
   }
