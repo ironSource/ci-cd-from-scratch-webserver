@@ -1,5 +1,54 @@
 #!groovy?
-def createPullRequest(url, text) {
+
+def createGithubPullRequest(String message, String project, String branch) {
+    def githubToken = getGitHubToken()
+    def apiUrl = new URL("https://api.github.com/repos/${project}/pulls")
+    echo "creating PR for ${apiUrl}"
+    try {
+        HttpURLConnection connection = apiUrl.openConnection()
+        if (githubToken.length() > 0) {
+            connection.setRequestProperty("Authorization", "Bearer ${githubToken}")
+        }
+        connection.setRequestMethod("POST")
+        connection.setDoOutput(true)
+        connection.connect()
+
+        def body = """
+        {
+          "title": "${message}",
+          "head": "${branch}",
+          "base": "master"
+        }
+        """
+        echo "sending body: ${body}\n"
+
+        OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream())
+        writer.write(body)
+        writer.flush()
+
+        // execute the POST request
+        def rs = new JsonSlurper().parse(new InputStreamReader(connection.getInputStream(), "UTF-8"))
+
+        connection.disconnect()
+
+        echo "Received PR id:  ${rs.number}"
+        return rs.number + ''
+
+    } catch (err) {
+        error "ERROR  ${err}"
+    }
+}
+
+def getGitHubToken() {
+  def tokenPath = '/home/jenkins/.apitoken/hub'
+  def githubToken = readFile tokenPath
+  if (!githubToken?.trim()) {
+    error "No GitHub token found in ${tokenPath}"
+  }
+  return githubToken.trim()
+}
+
+def createBitbucketPullRequest(url, text) {
   def payload = JsonOutput.toJson(text) 
     sh "curl -n -X POST -H 'Content-Type: application/json' --data ${payload} ${url}"
 }
@@ -143,7 +192,15 @@ pipeline {
             branch: env.GIT_BRANCH])
       }
     }
-
+    stage ('CREATE PULL REQUEST') {
+      steps {
+        if (env.GIT_BRANCH =~ /^staging/) {
+            createGithubPullRequest("tests jenkins pull request", env.PROJECT, env.GIT_BRANCH)
+        } else {
+            echo 'no need to create pull request'
+        }
+      }
+    }
   }
 }
 
