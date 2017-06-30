@@ -1,5 +1,6 @@
 #!groovy?
 
+import com.cloudbees.groovy.cps.NonCPS
 import groovy.json.JsonSlurper
 
 def createGithubPullRequest(String message, String project, String branch) {
