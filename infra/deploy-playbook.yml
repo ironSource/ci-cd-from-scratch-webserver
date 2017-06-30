@@ -5,6 +5,10 @@
   tasks:
   - debug:
       msg: "deploying to aws"
+  - name: remove container
+    docker_container:
+      name: "{{ service }}"
+      state: absent
   - name: Log into DockerHub
     docker_login:
       username: "jenkinsewebservertutorial"
@@ -14,10 +18,6 @@
     docker_image:
       name: "{{ image }}"
       tag: "{{ commit }}"
-  - name: remove container
-    docker_container:
-      name: "{{ service }}"
-      state: absent
   - name: start container
     docker_container:
       name: "{{ service }}"
