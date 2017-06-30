@@ -5,16 +5,7 @@ import groovy.json.JsonSlurper
 
 def createGithubPullRequest(String message, String project, String branch) {
     def githubToken = getGitHubToken()
-    def apiUrl = new URL("https://api.github.com/repos/${project}/pulls")
-    echo "creating PR for ${apiUrl}"
     try {
-        HttpURLConnection connection = apiUrl.openConnection()
-        if (githubToken.length() > 0) {
-            connection.setRequestProperty("Authorization", "Bearer ${githubToken}")
-        }
-        connection.setRequestMethod("POST")
-        connection.setDoOutput(true)
-        connection.connect()
 
         def body = """
         {
@@ -24,18 +15,10 @@ def createGithubPullRequest(String message, String project, String branch) {
         }
         """
         echo "sending body: ${body}\n"
+        def response = httpRequest acceptType: 'APPLICATION_JSON', contentType: 'APPLICATION_JSON', httpMode: 'POST', requestBody: body, customHeaders: [[name: "Authorization", value: "Bearer ${githubToken}"]], url: "https://api.github.com/repos/${project}/pulls"
 
-        OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream())
-        writer.write(body)
-        writer.flush()
-
-        // execute the POST request
-        def rs = new JsonSlurper().parse(new InputStreamReader(connection.getInputStream(), "UTF-8"))
-
-        connection.disconnect()
-
-        echo "Received PR id:  ${rs.number}"
-        return rs.number + ''
+        echo "Received PR id:  ${response}"
+        return response
 
     } catch (err) {
         error "ERROR  ${err}"
