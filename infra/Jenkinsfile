@@ -4,7 +4,6 @@ import com.cloudbees.groovy.cps.NonCPS
 import groovy.json.JsonSlurper
 
 def createGithubPullRequest(String message, String project, String branch, String username, String token) {
-    def githubToken = '5a3f6d441093eca875a6ebe554656d2f652bcf41'
     try {
 
         def body = """
