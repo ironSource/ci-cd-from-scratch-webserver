@@ -3,8 +3,8 @@
 import com.cloudbees.groovy.cps.NonCPS
 import groovy.json.JsonSlurper
 
-def createGithubPullRequest(String message, String project, String branch) {
-    def githubToken = getGitHubToken()
+def createGithubPullRequest(String message, String project, String branch, String username, String password) {
+    def githubToken = '5a3f6d441093eca875a6ebe554656d2f652bcf41'
     try {
 
         def body = """
@@ -15,23 +15,14 @@ def createGithubPullRequest(String message, String project, String branch) {
         }
         """
         echo "sending body: ${body}\n"
-        def response = httpRequest acceptType: 'APPLICATION_JSON', contentType: 'APPLICATION_JSON', httpMode: 'POST', requestBody: body, customHeaders: [[name: "Authorization", value: "Bearer ${githubToken}"]], url: "https://api.github.com/repos/${project}/pulls"
+        def response = httpRequest acceptType: 'APPLICATION_JSON', contentType: 'APPLICATION_JSON', httpMode: 'POST', requestBody: body, url: "https://${username}:${password}@api.github.com/repos/${project}/pulls"
 
-        echo "Received PR id:  ${response}"
+        echo "responce status: ${response}"
         return response
 
     } catch (err) {
         error "ERROR  ${err}"
     }
-}
-
-def getGitHubToken() {
-  def tokenPath = '/home/jenkins/.apitoken/hub'
-  def githubToken = readFile tokenPath
-  if (!githubToken?.trim()) {
-    error "No GitHub token found in ${tokenPath}"
-  }
-  return githubToken.trim()
 }
 
 def createBitbucketPullRequest(url, text) {
@@ -179,13 +170,13 @@ pipeline {
       }
     }
     stage ('CREATE PULL REQUEST') {
-
-
       when {
         expression {return env.GIT_BRANCH == 'staging'}
       }
       steps {
-        createGithubPullRequest("tests jenkins pull request", env.PROJECT, env.GIT_BRANCH)
+        withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'b86dc47c-c339-4b03-9aaf-0be24704ef6b', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD']]) {
+          createGithubPullRequest("tests jenkins pull request", env.PROJECT, env.GIT_BRANCH, env.GIT_USERNAME, env.GIT_PASSWORD)
+        }
       }
     }
   }
