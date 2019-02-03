@@ -1,0 +1,22 @@
+version: "3"
+services:
+    backapi:
+        image: "{{image}}:{{commit}}"
+        hostname: "{{service}}"
+        labels:
+            com.docker.stack.namespace: "{{service}}"
+        networks:
+            -<%your network name%> 
+        deploy:
+            placement:
+              constraints:
+                - node.labels.network == private
+            restart_policy:
+                condition: on-failure
+                delay: 5s
+                max_attempts: 3
+                window: 3s
+networks:
+    <%your network name%>:
+        external:
+            name: <%your network name%>

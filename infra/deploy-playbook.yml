@@ -1,0 +1,28 @@
+---
+- hosts: webserver
+  remote_user: ubuntu
+  vars:
+  tasks:
+  - debug:
+      msg: "deploying to aws"
+  - name: remove container
+    docker_container:
+      name: "{{ service }}"
+      state: absent
+  - name: Log into DockerHub
+    docker_login:
+      username: "jenkinsewebservertutorial"
+      password: "*********"
+      email: "zigius@mailinator.com"
+  - name: pull image
+    docker_image:
+      name: "{{ image }}"
+      tag: "{{ commit }}"
+  - name: start container
+    docker_container:
+      name: "{{ service }}"
+      image: "{{ image }}:{{ commit }}"
+      ports:
+       - "8000:8000"
+      state: started
+

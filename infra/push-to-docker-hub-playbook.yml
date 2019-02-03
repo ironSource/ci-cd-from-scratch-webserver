@@ -1,0 +1,21 @@
+---
+- hosts: localhost
+  vars:
+  tasks:
+  - debug:
+      msg: "pushing {{ image }}:{{ commit }} "
+  - name: Log into DockerHub
+    docker_login:
+      username: "jenkinsewebservertutorial"
+      password: "********"
+      email: "zigius@mailinator.com"
+  - name: pushing image
+    docker_image:
+      push: yes
+      name: "{{ image }}"
+      tag: "{{ commit }}"
+  - name: pushing image
+    docker_image:
+      push: yes
+      name: "{{ image }}"
+      tag: "{{ branch }}"
