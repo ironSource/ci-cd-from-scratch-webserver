@@ -1,4 +1,4 @@
-const logger = require('../lib/services/logger');
+import logger from '../lib/services/logger';
 
 let env;
 
@@ -17,4 +17,4 @@ const config = require('simpler-config').load(
   }[env]
 );
 
-module.exports = config;
+export default config;

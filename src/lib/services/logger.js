@@ -1,7 +1,7 @@
 'use strict';
 const CURRENT_ENV = process.env.NODE_ENV || 'development';
-var pjson = require('../../../package.json');
-const bunyan = require('bunyan');
+import { name as _name } from '../../../package.json';
+import { createLogger, stdSerializers } from 'bunyan';
 let logLevel = 'debug';
 
 
@@ -13,9 +13,9 @@ if (CURRENT_ENV === 'master') {
   logLevel = 'fatal';
 }
 
-module.exports = bunyan.createLogger({
-  name: `<%your project name%>${CURRENT_ENV}-${pjson.name}`,
-  serializers: bunyan.stdSerializers,
+export default createLogger({
+  name: `<%your project name%>${CURRENT_ENV}-${_name}`,
+  serializers: stdSerializers,
   src: true,
   streams: [
     {
